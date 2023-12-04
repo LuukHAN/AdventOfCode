@@ -1,5 +1,2 @@
-# Schrijf hieronder je eigen code
-gen="kaas"
-functie = "boter"
-organisme = "eieren"
-print("Het gen ",gen," heeft de functie ",functie," en is betrokken bij het gif van de slang ",organisme)
+set = (3, 2)
+print(set[1])

@@ -1,3 +1,10 @@
+"""
+V1 werkt ook aardig, maar die print voor alle occurences, dus als er een voor en na zit
+print hij hem 2x. Dit moet eer keer worden, ik dacht dmv is_part = True/False.
+Of aan de result list toevoegen en dan kijken of de laatste hetzelfde is als wat je nu
+wilt toevoegen, maar ik denk niet dat dat werkt, aangezien je 2x achter elkaar hetzelfde nummer
+kan krijgen.
+"""
 import re
 
 def read_file(input_bestand):
@@ -40,48 +47,55 @@ def find_spec_chars(spec_strings):
 def find_touch(numb_pos, char_pos):
     for line_count in numb_pos:
         for numb in numb_pos[line_count]:
+            is_part = False
             # numb is ['467', (0, 3)]
             # print(f'numb = {numb[0]}')
 
             # check de line die erboven zit of daar aangrenzende spec chars zitten
-            if line_count != 0:
+            if line_count != 0 and not is_part:
                 check_line = line_count - 1
                 for spec_char_pos in char_pos[check_line]:
                     # print(f'spec_char on {check_line} = {char_pos[check_line]}')
                     if spec_char_pos >= numb[1][0]: # de pos van spec char >= de start pos van het nummer
                         if spec_char_pos < numb[1][1]: # de pos van spec char is kleiner dan het nummer
                             print(f'Een machine onderdeel = {numb[0]}')
+                            is_part = True
 
             # check of de line eronder een aangrenzend spec char heeft
-            check_line_bel = line_count + 1
-            try:
-                for spec_char_pos in char_pos[check_line_bel]:
-                    if spec_char_pos >= numb[1][0]:
-                        if spec_char_pos < numb[1][1]:
-                            print(f'Een machine onderdeel (below) = {numb[0]}')
-            except KeyError:  # Op de laastste line geeft hij een foutmelding
-                pass  # geen continue, omdat we nog andere dingen moeten proberen
+            if not is_part:
+                check_line_bel = line_count + 1
+                try:
+                    for spec_char_pos in char_pos[check_line_bel]:
+                        if spec_char_pos >= numb[1][0]:
+                            if spec_char_pos < numb[1][1]:
+                                print(f'Een machine onderdeel (below) = {numb[0]}')
+                                is_part = True
+                except KeyError:  # Op de laastste line geeft hij een foutmelding
+                    pass  # geen continue, omdat we nog andere dingen moeten proberen
 
             # check of er een aangrenzende spec_char is
-            for spec_char_pos in char_pos[line_count]:  # line count is de huidige line
-                # numb is ['467', (0, 3)]
-                # char_pos = {0: [], 1: [3], 2: [], 3: [6], 4: [3], 5: [5], 6: [], 7: [], 8: [3, 5], 9: []}
+            if not is_part:
+                for spec_char_pos in char_pos[line_count]:  # line count is de huidige line
+                    # numb is ['467', (0, 3)]
+                    # char_pos = {0: [], 1: [3], 2: [], 3: [6], 4: [3], 5: [5], 6: [], 7: [], 8: [3, 5], 9: []}
 
-                pos_before = numb[1][0] - 1
-                pos_after = numb[1][1] # voor pos after hoeft +1 niet omdat regex dat al doet
-                # print(f'spec_char_pos = {spec_char_pos}')
-                if pos_before < 0:
-                    pass
-                else:
-                    if spec_char_pos == pos_before:
-                        print(f'een karakter die er een direct voor heeft: {numb[0]}')
-                if spec_char_pos == pos_after:
-                    print(f'een karakter die er een NA heeft: {numb[0]}')
+                    pos_before = numb[1][0] - 1
+                    pos_after = numb[1][1] # voor pos after hoeft +1 niet omdat regex dat al doet
+                    # print(f'spec_char_pos = {spec_char_pos}')
+                    if pos_before < 0:
+                        pass
+                    else:
+                        if spec_char_pos == pos_before:
+                            is_part = True
+                            print(f'een karakter die er een direct voor heeft: {numb[0]}')
+                    if spec_char_pos == pos_after and not is_part:
+                        print(f'een karakter die er een NA heeft: {numb[0]}')
+                        is_part = True
 
 
 
 if __name__ == "__main__":
-    given_data = read_file('test.txt')
+    given_data = read_file('input.txt')
     number_positions = find_numbs(given_data)
     spec_char_positions = find_spec_chars(given_data)
     output = find_touch(number_positions, spec_char_positions)

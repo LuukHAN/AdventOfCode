@@ -2,6 +2,7 @@
 Deel 1 is gelukt, nu moet de gear ratio gevonden worden.
 """
 import re
+import numpy as np
 
 def read_file(input_bestand):
     with open(input_bestand, "r") as file:

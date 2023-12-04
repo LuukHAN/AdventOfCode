@@ -23,25 +23,43 @@ def format_cards(card_line):
                 number_row = number_row.split(" ")
                 card_value.append(number_row)
 
-    card_dict.update({card_key: part})
+    card_dict.update({card_key: card_value})
     return card_dict
 
 
 def comp_results(result_cards):
+    total = 0
     for card in result_cards:
         card = format_cards(card)
         # {'Card 1': [['41', '48', '83', '86', '17'], ['83', '86', '6', '31', '17', '9', '48', '53']]}
         for numbers in card.values():
             win_numb = numbers[0]
             numb_card = numbers[1]
+
             # maak de regex string:
+            """
             search_pattern = ''
             for numb in win_numb:
                 search_pattern += numb + '|'
             match = re.findall(search_pattern, numb_card)
             print(match)
+            """
+            points = 0
+            has_point = False
+            for number in numb_card:
+                if number in win_numb:
+                    # print(f'match is on {number}')
+                    if not has_point:
+                        has_point = True
+                        points = 1
+                    elif has_point:
+                        points *= 2
+            print(f'points for {card.keys()}: {points}')
+            total += points
+    return total
 
 
 if __name__ == "__main__":
     cards = read_file('input.txt')
-    comp_results(cards)
+    output = comp_results(cards)
+    print(f'de kaarten zijn {output} punten waard!')

@@ -29,8 +29,12 @@ def format_cards(card_line):
 
 def comp_results(result_cards):
     total = 0
-    for card in result_cards:
+    cards_to_play = [1]
+    card_numb = 1
+    cards_dict = {}
+    for card_numb, card in enumerate(result_cards):
         card = format_cards(card)
+        cur_card = {}
         # {'Card 1': [['41', '48', '83', '86', '17'], ['83', '86', '6', '31', '17', '9', '48', '53']]}
         for numbers in card.values():
             win_numb = numbers[0]
@@ -53,10 +57,12 @@ def comp_results(result_cards):
                         has_point = True
                         points = 1
                     elif has_point:
-                        points *= 2
+                        points += 1
             print(f'points for {card.keys()}: {points}')
             total += points
-    return total
+        card_numb += 1
+        cards_dict.update({card_numb: points})
+    return cards_dict
 
 
 if __name__ == "__main__":

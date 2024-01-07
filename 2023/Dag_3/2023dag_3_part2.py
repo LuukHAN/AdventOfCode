@@ -41,6 +41,7 @@ def find_asterix(spec_strings):
     return spec_char_pos
 
 
+
 def find_touch(numb_pos, char_pos):
     part_list = []
     for line_count in numb_pos:

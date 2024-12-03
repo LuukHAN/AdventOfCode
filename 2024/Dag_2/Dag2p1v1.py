@@ -15,37 +15,15 @@ def readfile(file_name):
 
 
 def loop_through_lines(input_data):
+    safe_lines = []
     for line in input_data:
-        is_descending = check_ascending_order(line)
-        #is_ascending = check_ascending_order(line)
-        if is_descending:
-            print(line)
-
-
-def check_descending_order(data):
-    data = data.split(' ')
-    data = [int(x) for x in data]
-    is_descending = True
-    for index, number in enumerate(data):
-        if index == 0:
-            continue
-        else:
-            if number > data[index - 1]:
-                is_descending = False
-    return is_descending
-
-
-def check_ascending_order(data):
-    data = data.split(' ')
-    data = [int(x) for x in data]
-    is_ascending = True
-    for index, number in enumerate(data):
-        if index == 0:
-            continue
-        else:
-            if number > data[index - 1]:
-                is_ascending = False
-    return is_ascending
+        line = line.split(' ')
+        line = [int(x) for x in line]
+        sorted_line = sorted(line)
+        if sorted_line == line or sorted_line[::-1] == line:
+            check_set = set(line)
+            if len(check_set) == len(line):
+                print(line)
 
 
 if __name__ == '__main__':

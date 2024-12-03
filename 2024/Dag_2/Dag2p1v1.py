@@ -23,7 +23,16 @@ def loop_through_lines(input_data):
         if sorted_line == line or sorted_line[::-1] == line:
             check_set = set(line)
             if len(check_set) == len(line):
-                print(line)
+                is_safe = True
+                for index, number in enumerate(line):
+                    if index == 0:
+                        continue
+                    else:
+                        if abs(number - line[index - 1]) > 3:
+                            # print(f'{line} <-- {number} - {line[index - 1]} = {abs(number - line[index - 1])}')
+                            is_safe = False
+                if is_safe:
+                    print(line)
 
 
 if __name__ == '__main__':

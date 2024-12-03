@@ -32,10 +32,12 @@ def loop_through_lines(input_data):
                             # print(f'{line} <-- {number} - {line[index - 1]} = {abs(number - line[index - 1])}')
                             is_safe = False
                 if is_safe:
-                    print(line)
+                    safe_lines.append(line)
+    return safe_lines
 
 
 if __name__ == '__main__':
-    in_file_path = 'C:\\Users\\luukv\\PycharmProjects\\AoC\\2024\\Dag_2\\test_input.txt'
+    in_file_path = 'C:\\Users\\luukv\\PycharmProjects\\AoC\\2024\\Dag_2\\input.txt'
     input_data = readfile(in_file_path)
-    loop_through_lines(input_data)
+    safe = loop_through_lines(input_data)
+    print(len(safe))

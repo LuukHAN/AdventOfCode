@@ -15,40 +15,83 @@ def readfile(file_name):
 
 
 def loop_through_lines(input_data):
+    safe_lines = []
     for line in input_data:
+        forward_pop = False
+        backward_pop = False
         line_is_safe = True
         line = line.split(' ')
         line = [int(x) for x in line]
-        sorted_line = sorted(line)
-        if sorted_line == line or sorted_line[::-1] == line:
-            check_set = set(line)
-            if len(check_set) == len(line):
-                is_safe = True
-                for index, number in enumerate(line):
-                    if index == 0:
-                        continue
-                    else:
-                        if abs(number - line[index - 1]) > 3:
-                            # print(f'{line} <-- {number} - {line[index - 1]} = {abs(number - line[index - 1])}')
-                            is_safe = False
-                if is_safe:
-                    safe_lines.append(line)
-    return safe_lines
+        direction = ''
+        error_count = 0
+
+        # begin eerst met kijken of het oploopt
+        error_list_forward = is_scending(line, 'forward')
+        if len(error_list_forward) == 1:
+            error_list_forward = is_scending(line, 'forward', to_pop=error_list_forward[0])
+            forward_pop = True
+        error_list_backward = is_scending(line, 'backward')
+        if len(error_list_backward) == 1:
+            error_list_backward = is_scending(line, 'backward', to_pop=error_list_backward[0])
+            backward_pop = True
+
+        if error_list_forward > error_list_backward:
+            direction = 'descending'
+            if backward_pop:
+                error_count += 1
+        elif error_list_forward < error_list_backward:
+            direction = 'ascending'
+            if forward_pop:
+                error_count += 1
+        else:
+            direction = 'gelijk'
+        print(f'{line} <--{direction}<--{error_count}')
+
+        if direction == 'descending':
+            for index, number in enumerate(line):
+                if number == 0:
+                    continue
+                else:
+                    if abs(number - line[index - 1]) > 3 or abs(number - line[index]) <= 1:
+                        error_list_backward.append(number)
+        elif direction == 'ascending':
+            for index, number in enumerate(line):
+                if number == 0:
+                    continue
+                else:
+                    if abs(number - line[index - 1]) > 3 or abs(number - line[index]) <= 1:
+                        error_list_forward.append(number)
+
+        if len(error_list_forward) > 0 and len(error_list_backward) > 0:
+            print(f'{line} is unsafe')
+            line_is_safe = False
 
 
-def check_order_rm_one(line):
-    errors_found = 0
-    for index, number in enumerate(line):
+
+
+
+def is_scending(numb_line, direction, to_pop=None):
+    """
+    :param numb_line: list met nummers (int)
+    :param direction: [forward|backward] ascending or descending
+    :return: error_cases: de nummers die problemen veroorzaakten
+    """
+    error_cases = []
+    if to_pop:
+        numb_line.remove(to_pop)
+    for index, number in enumerate(numb_line):
         if index == 0:
             continue
         else:
-            if number > line[index - 1]: # controleert huidig groter dan vorige.
-
-
-
+            if direction == 'forward': # kijk of het omhoogloopt
+                if not number > numb_line[index - 1]:
+                    error_cases.append(number)
+            elif direction == 'backward':
+                if not number < numb_line[index - 1]:
+                    error_cases.append(number)
+    return error_cases
 
 if __name__ == '__main__':
-    in_file_path = 'C:\\Users\\luukv\\PycharmProjects\\AoC\\2024\\Dag_2\\input.txt'
+    in_file_path = 'C:\\Users\\luukv\\PycharmProjects\\AoC\\2024\\Dag_2\\test_input.txt'
     input_data = readfile(in_file_path)
     safe = loop_through_lines(input_data)
-    print(len(safe))

@@ -47,7 +47,7 @@ def multiply_muls(muls):
 
 
 if __name__ == '__main__':
-    in_file_path = 'C:\\Users\\luukv\\PycharmProjects\\AoC\\2024\\Dag_3\\input.txt'
+    in_file_path = 'C:\\Users\\luukv\\PycharmProjects\\AoC\\2024\\Dag_3\\test_input.txt'
     input_data = readfile(in_file_path)
     found = find_muls(input_data)
     filtered_muls = find_correct_muls(found)
